@@ -79,11 +79,9 @@ public class GraphTraversalBenchmarks {
                 tx = db.beginTx();
             }
             for (long like = 0; like < likesCount; like++) {
-                HashMap<String, Object> props  = new HashMap<>();
-                props.put("weight", rand.nextInt(10));
                 Long randomItem = items.get(rand.nextInt(items.size()));
                 Relationship r = node.createRelationshipTo(db.getNodeById(randomItem), RelationshipType.withName("LIKES"));
-                r.setProperty(WEIGHT, rand.nextInt(10) + 1 );
+                r.setProperty(WEIGHT, rand.nextDouble() * 10.0);
             }
         }
         tx.success();
@@ -97,7 +95,6 @@ public class GraphTraversalBenchmarks {
     @Threads(1)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    //5719.898 ms/op
     public long measureRecommendationTraversal() {
         long[] count = new long[]{0};
         GraphDatabaseService db = neo4j.graph();
@@ -127,7 +124,6 @@ public class GraphTraversalBenchmarks {
     @Threads(1)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    //17419.812 ms/op
     public long measureRecommendationTraversalWithRelationshipProperties() {
         long[] count = new long[]{0};
         GraphDatabaseService db = neo4j.graph();
@@ -137,15 +133,15 @@ public class GraphTraversalBenchmarks {
         Node person = db.getNodeById(randomPerson);
 
         person.getRelationships(Direction.OUTGOING, LIKES).forEach(rel -> {
-            if ((int)rel.getProperty(WEIGHT) > -1) {
+            if ((double)rel.getProperty(WEIGHT) > -1.0) {
                 long itemId = rel.getEndNodeId();
                 Node item = db.getNodeById(itemId);
                 item.getRelationships(Direction.INCOMING, LIKES).forEach(rel2 -> {
-                    if ((int)rel2.getProperty(WEIGHT) > -1) {
+                    if ((double)rel2.getProperty(WEIGHT) > -1.0) {
                         long otherPersonId = rel2.getStartNodeId();
                         Node otherPerson = db.getNodeById(otherPersonId);
                         otherPerson.getRelationships(Direction.OUTGOING, LIKES).forEach(rel3 -> {
-                            if ((int)rel3.getProperty(WEIGHT) > -1) {
+                            if ((double)rel3.getProperty(WEIGHT) > -1.0) {
                                 count[0]++;
                             }
                     });
