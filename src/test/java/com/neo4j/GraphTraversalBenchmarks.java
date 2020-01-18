@@ -28,8 +28,13 @@ public class GraphTraversalBenchmarks {
     @Param({"100"})
     private int likesCount;
 
+    @TearDown
+    public void shutdown() {
+        neo4j.close();
+    }
+
     @Setup
-    public void prepare() throws IOException {
+    public void prepare() {
         items = new ArrayList<>();
         people = new ArrayList<>();
 
