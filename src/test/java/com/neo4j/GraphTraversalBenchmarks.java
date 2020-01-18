@@ -103,13 +103,13 @@ public class GraphTraversalBenchmarks {
         Long randomPerson = people.get(rand.nextInt(people.size()));
         Node person = db.getNodeById(randomPerson);
 
-        person.getRelationships(Direction.OUTGOING, RelationshipType.withName("LIKES")).forEach(rel -> {
+        person.getRelationships(Direction.OUTGOING, LIKES).forEach(rel -> {
             long itemId = rel.getEndNodeId();
             Node item = db.getNodeById(itemId);
-            item.getRelationships(Direction.INCOMING, RelationshipType.withName("LIKES")).forEach(rel2 -> {
+            item.getRelationships(Direction.INCOMING, LIKES).forEach(rel2 -> {
                 long otherPersonId = rel2.getStartNodeId();
                 Node otherPerson = db.getNodeById(otherPersonId);
-                otherPerson.getRelationships(Direction.OUTGOING, RelationshipType.withName("LIKES")).forEach(rel3 ->
+                otherPerson.getRelationships(Direction.OUTGOING, LIKES).forEach(rel3 ->
                         count[0]++);
             });
         });
@@ -150,6 +150,5 @@ public class GraphTraversalBenchmarks {
         });
 
         return count[0];
-
     }
 }
