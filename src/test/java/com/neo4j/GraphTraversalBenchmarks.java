@@ -5,7 +5,6 @@ import org.neo4j.harness.ServerControls;
 import org.neo4j.harness.TestServerBuilders;
 import org.openjdk.jmh.annotations.*;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -93,9 +92,52 @@ public class GraphTraversalBenchmarks {
         tx.close();
     }
 
+
     @Benchmark
-    @Warmup(iterations = 10)
-    @Measurement(iterations = 10)
+    @Warmup(iterations = 2)
+    @Measurement(iterations = 2)
+    @Fork(1)
+    @Threads(1)
+    @BenchmarkMode(Mode.AverageTime)
+    @OutputTimeUnit(TimeUnit.MILLISECONDS)
+    public long measureOrderedRecommendationTraversal() {
+        long[] count = new long[]{0};
+        GraphDatabaseService db = neo4j.graph();
+        Transaction tx = db.beginTx();
+
+        for (int i = 0; i < 500000; i++) {
+            Long randomPerson = people.get(rand.nextInt(people.size()));
+            Node person = db.getNodeById(randomPerson);
+            person.getRelationships(Direction.OUTGOING, LIKES).forEach(rel -> count[0]++);
+        }
+        //System.out.println(count[0]);
+        return count[0];
+    }
+
+    @Benchmark
+    @Warmup(iterations = 2)
+    @Measurement(iterations = 2)
+    @Fork(1)
+    @Threads(1)
+    @BenchmarkMode(Mode.AverageTime)
+    @OutputTimeUnit(TimeUnit.MILLISECONDS)
+    public long measureUnOrderedRecommendationTraversal() {
+        long[] count = new long[]{0};
+        GraphDatabaseService db = neo4j.graph();
+        Transaction tx = db.beginTx();
+
+        for (int i = 0; i < 10000; i++) {
+            Long randomItem = items.get(rand.nextInt(items.size()));
+            Node item = db.getNodeById(randomItem);
+            item.getRelationships(Direction.INCOMING, LIKES).forEach(rel -> count[0]++);
+        }
+        //System.out.println(count[0]);
+        return count[0];
+    }
+
+    @Benchmark
+    @Warmup(iterations = 2)
+    @Measurement(iterations = 2)
     @Fork(1)
     @Threads(1)
     @BenchmarkMode(Mode.AverageTime)
@@ -118,13 +160,13 @@ public class GraphTraversalBenchmarks {
                         count[0]++);
             });
         });
-
+        //System.out.println(count[0]);
         return count[0];
     }
 
     @Benchmark
-    @Warmup(iterations = 10)
-    @Measurement(iterations = 10)
+    @Warmup(iterations = 2)
+    @Measurement(iterations = 2)
     @Fork(1)
     @Threads(1)
     @BenchmarkMode(Mode.AverageTime)
@@ -149,11 +191,11 @@ public class GraphTraversalBenchmarks {
                             if ((double)rel3.getProperty(WEIGHT) > -1.0) {
                                 count[0]++;
                             }
-                    });
-                }});
+                        });
+                    }});
             }
         });
-
+        //System.out.println(count[0]);
         return count[0];
     }
 }
