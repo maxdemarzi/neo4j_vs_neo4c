@@ -1,5 +1,5 @@
 Benchmark                                                                          (itemCount)  (likesCount)  (personCount)  Mode  Cnt       Score   Error  Units
-GraphTraversalBenchmarks.measureOrderedRecommendationTraversal                            2000           100         100000  avgt    2    6108.244          ms/op
+GraphTraversalBenchmarks.measureOrderedTraversal                                          2000           100         100000  avgt    2    6108.244          ms/op
 GraphTraversalBenchmarks.measureRecommendationTraversal                                   2000           100         100000  avgt    2    5595.515          ms/op
 GraphTraversalBenchmarks.measureRecommendationTraversalWithRelationshipProperties         2000           100         100000  avgt    2   16428.765          ms/op
-GraphTraversalBenchmarks.measureUnOrderedRecommendationTraversal                          2000           100         100000  avgt    2  125394.511          ms/op
+GraphTraversalBenchmarks.measureUnOrderedTraversal                                        2000           100         100000  avgt    2  125394.511          ms/op

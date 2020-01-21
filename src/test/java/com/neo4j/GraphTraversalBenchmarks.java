@@ -100,7 +100,7 @@ public class GraphTraversalBenchmarks {
     @Threads(1)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    public long measureOrderedRecommendationTraversal() {
+    public long measureOrderedTraversal() {
         long[] count = new long[]{0};
         GraphDatabaseService db = neo4j.graph();
         Transaction tx = db.beginTx();
@@ -121,7 +121,7 @@ public class GraphTraversalBenchmarks {
     @Threads(1)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    public long measureUnOrderedRecommendationTraversal() {
+    public long measureUnOrderedTraversal() {
         long[] count = new long[]{0};
         GraphDatabaseService db = neo4j.graph();
         Transaction tx = db.beginTx();
